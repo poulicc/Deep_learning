@@ -32,13 +32,14 @@ from torch.utils.data import DataLoader
 start=time.time()
 
 #Hyper parameters
-BATCH_SIZE = 25#int(sys.argv[1])#251
+BATCH_SIZE = int(sys.argv[1])
 NBSAMPLESTRAIN= 1098
 NBSAMPLESVAL= 343
-MAX_EPOCH =60#int(sys.argv[2])#2
-LR= 0.001 #float(sys.argv[3])#0.001
+MAX_EPOCH = int(sys.argv[2])
+LR= float(sys.argv[3])
 in_db_=False
-name_file = "test_60epoch.pt" #sys.argv[4]
+name_file = sys.argv[4]
+name_file_plot= sys.argv[5]
 nb_ligne=251
 nb_sample=NBSAMPLESTRAIN+NBSAMPLESVAL
 nb_batch=int(nb_ligne*nb_sample//BATCH_SIZE*0.80)
@@ -133,8 +134,9 @@ for id_epoch in range(MAX_EPOCH):
     loss_epoch_val.append(sum(tab_val)/len(tab_val))
 
 # Save weights
-SAVEDIR=os.path.join(CURDIRPATH, "model_FNN", name_file)
-th.save(net, name_file)
+SAVEDIR=os.path.join("model_FNN", name_file)
+PLOTDIR=os.path.join("plot_FNN", name_file_plot)
+th.save(net, SAVEDIR)
 
 interval=time.time()-start
 print("Il a fallu : ",interval, "secondes")
@@ -144,7 +146,6 @@ plt.figure()
 plt.plot(loss_epoch_train,label='Training')
 plt.plot(loss_epoch_val,label='Validation')
 plt.legend()
-plt.xlabel('Batch itération')
+plt.xlabel('Epoch')
 plt.ylabel('MSE')
-# plt.savefig("plot/modele_"+sys.argv[5])
-plt.show()
+plt.savefig(PLOTDIR+".png")

@@ -36,7 +36,6 @@ import librosa.display
 import torch as th
 from spectro_norm import *
 from column_spectro import fill_tab_column
-from verif_function import visualize_spectrogram
 
 # Global variables : choose what you want to do (set to TRUE)
 SAVE_INDEX=False # save the index (correspondence between file name -number- and its number in the complete list)
