@@ -21,25 +21,33 @@ class Net(nn.Module):
         super().__init__()
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=6, kernel_size=(5, 5))
         self.pool = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+        self.unpool = nn.MaxUnpool2d(kernel_size=(2, 2), stride=(2, 2), output_size=th.Size([20, 16, 61, 59]))
         self.conv2 = nn.Conv2d(6, 16, 5)
         self.conv3 = nn.Conv2d(16, 6, 5)
         self.conv4 = nn.Conv2d(6, 1, 5)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
+        print(x.shape)
         x = self.pool(F.relu(self.conv2(x)))
+        print(x.shape)
         # x = th.flatten(x, 1) # flatten all dimensions except batch
-        x = self.pool(F.relu(self.conv3(x)))
+        x = self.unpool(F.relu(self.conv3(x)), output_size=th.Size([20, 16, 61, 59]))
+        print(x.shape)
         x = self.pool(F.relu(self.conv4(x)))
         return x
 
 #Hyper parameters
-BATCH_SIZE = 30#int(sys.argv[1])#251
+BATCH_SIZE = 20#int(sys.argv[1])#251
 NBSAMPLESTRAIN= 753
 NBSAMPLESVAL= 343
 MAX_EPOCH = 4#int(sys.argv[2])#2
 LR= 0.001 #float(sys.argv[3])#0.001
 nb_ligne=251
+name_file = "test_1CNN.pt"
+name_file_plot= "test_1CNN"
+nb_sample=NBSAMPLESTRAIN+NBSAMPLESVAL
+nb_batch=int(nb_ligne*nb_sample//BATCH_SIZE*0.80)
 
 #import des data
 column_dataloader = DataModuleClass(NBSAMPLESTRAIN, NBSAMPLESVAL)
@@ -55,13 +63,17 @@ val_my_loss = nn.MSELoss()
 optimizer = th.optim.Adam(net.parameters(), lr=LR)
 
 # Décris la boucle d'apprentissage pendant l'entrainement avec MAX_EPOCH le nombre max d'epoch à réaliser, et nb_batch le nombre de batch de taille BATCH_SIZE
-tab_loss=[]
-tab_val=[]
+loss_epoch_train=[]
+loss_epoch_val=[]
 for id_epoch in range(MAX_EPOCH):
+    tab_loss=[]
+    tab_val=[]
     for batch_ndx, sample in enumerate(train_dataloader):
         out = net(sample[0])
+        print(sample[0].shape, out.shape, sample[1].shape)
+        exit()
         #Compare le resultat du réseau aux données clean
-        loss = my_loss(out, clean)
+        loss = my_loss(out, sample[1])
 
         #Gradiant
         optimizer.zero_grad()
@@ -69,12 +81,9 @@ for id_epoch in range(MAX_EPOCH):
         optimizer.step()
         tab_loss.append(loss.data)
 
-        # out_val=net(val_dataset[:][0])#noisy
-        # loss_val=val_my_loss(out_val, val_dataset[:][1])#clean
-        # tab_val.append(loss_val.data)
-
         print("epoch : "+str(id_epoch)+"/"+str(MAX_EPOCH))
         print("Chargement : "+str(int(batch_ndx/nb_batch*100.))+"%")
+    loss_epoch_train.append(sum(tab_loss)/len(tab_loss))
 
     for batch_ndx, sample in enumerate(val_dataloader):
         # Forward Pass
@@ -86,20 +95,22 @@ for id_epoch in range(MAX_EPOCH):
 
         print("Epoch"+str(id_epoch)+ "\t\t Validation Loss:"+
         str(loss_val.data / len(val_dataloader)))
+    loss_epoch_val.append(sum(tab_val)/len(tab_val))
 
-
-th.save(net, "test_modeleShuffle3.pt")
+SAVEDIR=os.path.join("model_CNN", name_file)
+PLOTDIR=os.path.join("plot_CNN", name_file_plot)
+th.save(net, SAVEDIR)
 
 interval=time.time()-start
 
 
 print("Il a fallu : ",interval, "secondes")
 
+#Plot loss
 plt.figure()
-plt.plot(tab_loss,label='Training')
-plt.plot(tab_val,label='Validation')
+plt.plot(loss_epoch_train,label='Training')
+plt.plot(loss_epoch_val,label='Validation')
 plt.legend()
-plt.xlabel('Batch itération')
+plt.xlabel('Epoch')
 plt.ylabel('MSE')
-# plt.savefig("plot/modele_"+sys.argv[5])
-plt.show()
+plt.savefig(PLOTDIR+".png")
