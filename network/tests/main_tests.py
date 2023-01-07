@@ -40,7 +40,7 @@ from spectro_norm import sig_to_spectro, sig_to_spectro_dB
 
 
 ## Global variables
-RECONSTRUC_ONESIG=False
+RECONSTRUC_ONESIG=True
 RECONSTRUC_ALLSIG=True
 IN_DB=False
 
@@ -63,12 +63,12 @@ nn.Linear(257, 257),
 )
 # load weights
 MODELPATH = os.path.join(CURDIRPATH, "..","model_FNN")
-name_model = "test_8.pt"
+name_model = "test_9.pt"
 model = th.load(os.path.join(MODELPATH, name_model))
 
 if RECONSTRUC_ONESIG:
     #selec one signal and take the number of the sound
-    index = 100
+    index = 27
     list = [int(s) for s in re.findall(r'-?\d+?', noise_paths[index])] # take all numbers before .flac in the path in a list
     num = ''.join(map(str, list))
 
