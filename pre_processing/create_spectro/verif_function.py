@@ -54,11 +54,13 @@ def reconstruction_sig(spectro_mod,spectro_ang,denorm_maxi,denorm_mini, plot=Fal
     reconstruc = mod_denorm * expo_angle
 
     sig = librosa.istft(reconstruc, n_fft=N, hop_length=int(H))
-
+    t=np.arange(0,len(sig),1)/16000
+    
     if plot==True:
         plt.figure()
-        plt.plot(sig)
-        plt.title("Le signal reconstitué")
+        plt.plot(t,sig)
+        plt.title("Output signal")
+        plt.xlabel('Time (s)')
         plt.show()
 
     if save[0]==True:
@@ -90,11 +92,12 @@ def reconstruction_sig_dB(spectro_mod,spectro_ang,denorm_maxi,denorm_mini, plot=
     reconstruc = mod_denorm * expo_angle
 
     sig = librosa.istft(reconstruc, n_fft=N, hop_length=int(H))
-
+    t=np.arange(0,len(sig),1)/16000
+    
     if plot==True:
         plt.figure()
-        plt.plot(sig)
-        plt.title("Le signal reconstitué")
+        plt.plot(t,sig)
+        plt.title("Output signal")
         plt.show()
 
     if save[0]==True:

@@ -40,8 +40,8 @@ from spectro_norm import sig_to_spectro, sig_to_spectro_dB
 
 
 ## Global variables
-RECONSTRUC_ONESIG=True
-RECONSTRUC_ALLSIG=False
+RECONSTRUC_ONESIG=False
+RECONSTRUC_ALLSIG=True
 IN_DB=False
 
 ##Prepare data
@@ -63,12 +63,12 @@ nn.Linear(257, 257),
 )
 # load weights
 MODELPATH = os.path.join(CURDIRPATH, "..","model_FNN")
-name_model = "test1_inDB.pt"
+name_model = "test_8.pt"
 model = th.load(os.path.join(MODELPATH, name_model))
 
 if RECONSTRUC_ONESIG:
     #selec one signal and take the number of the sound
-    index = 27
+    index = 100
     list = [int(s) for s in re.findall(r'-?\d+?', noise_paths[index])] # take all numbers before .flac in the path in a list
     num = ''.join(map(str, list))
 
@@ -97,60 +97,51 @@ if RECONSTRUC_ONESIG:
         recons_noisy=reconstruction_sig(output_numpy_test1, phase_noise, normalize_info[1], normalize_info[0],True,[True, str(num)+"_noisy.flac"])
 
     #Spectrogram linear
-    plt.figure()
+    vm=0.6
+    fig=plt.figure(figsize=(21, 7))
     plt.subplot(131)
-    plt.pcolormesh(noise_spectro)
-    plt.colorbar()
-    plt.title("Spectrogram of input noisy signal")
-
-    plt.subplot(132)
-    plt.pcolormesh(clean_spectro)
-    plt.colorbar()
-    plt.title("Spectrogram of the clean signal")
+    plt.pcolormesh(noise_spectro,vmax=vm)
+    plt.title("Input noisy")
+    plt.tight_layout()
 
     plt.subplot(133)
-    plt.pcolormesh(output_numpy_test1)
+    plt.pcolormesh(clean_spectro,vmax=vm)
+    plt.title("Clean")
+    plt.tight_layout()
     plt.colorbar()
-    plt.title("Spectrogram of the output")
+
+
+    plt.subplot(132)
+    plt.pcolormesh(output_numpy_test1,vmax=vm)
+    plt.colorbar()
+    plt.title("Output")
+    plt.tight_layout()
+    
 
     #Spectrogram dB
-    plt.figure()
-    plt.subplot(131)
-    plt.pcolormesh(20*np.log10(noise_spectro))
-    plt.colorbar()
-    plt.title("Spectrogram of the new noisy signal")
+    
 
-    plt.subplot(132)
-    plt.pcolormesh(20*np.log10(clean_spectro))
-    plt.colorbar()
-    plt.title("Spectrogram of the clean signal")
+    vma=0
+    fig1=plt.figure(figsize=(21, 7))
+    plt.subplot(131)
+    plt.pcolormesh(20*np.log10(noise_spectro),vmin=-60,vmax=vma)
+    plt.title("Input noisy")
+    plt.tight_layout()
 
     plt.subplot(133)
-    plt.pcolormesh(20*np.log10(output_numpy_test1))
+    plt.pcolormesh(20*np.log10(clean_spectro),vmin=-60,vmax=vma)
+    plt.title("Clean")
+    plt.tight_layout()
     plt.colorbar()
-    plt.title("Spectrogram of the output")
 
-    fig, ax = plt.subplots(nrows=3, ncols=1, sharex=True)
-    D = librosa.amplitude_to_db(noise_spectro, ref=np.max)
-    img=librosa.display.specshow(D, y_axis='linear', x_axis='time',
-                                   sr=16e3, ax=ax[0])
-    ax[0].set(title='Linear-Noisy')
-    ax[0].label_outer()
-
-    D = librosa.amplitude_to_db(clean_spectro,ref=np.max)
-    img=librosa.display.specshow(D, y_axis='linear', x_axis='time',
-                                   sr=16e3, ax=ax[1])
-    ax[1].set(title='Linear-Clean')
-    ax[1].label_outer()
-
-    D = librosa.amplitude_to_db(output_numpy_test1,ref=np.max)
-    img=librosa.display.specshow(D, y_axis='linear', x_axis='time',
-                                   sr=16e3, ax=ax[2])
-    ax[2].set(title='Linear-Output')
-    ax[2].label_outer()
-    fig.colorbar(img, ax=ax, format="%+2.f dB")
-
+    plt.subplot(132)
+    plt.pcolormesh(20*np.log10(output_numpy_test1),vmin=-60,vmax=vma)
+    plt.title("Output")
+    plt.tight_layout()
+    
     plt.show()
+    
+    
 
     ##SNR
     SNR_value = SNR(recons_noisy, clean)-10
@@ -191,5 +182,10 @@ if RECONSTRUC_ALLSIG:
 
     plt.figure()
     plt.plot(SNR_list)
-    plt.title("SNR for all the signal in test data set")
+    plt.title("SNR for all signals in test data set")
+    plt.ylabel('SNR (dB)')
+    plt.xlabel('Signal number')
     plt.show()
+
+    print(sum(SNR_list)/len(SNR_list))
+    print(np.median(SNR_list))
