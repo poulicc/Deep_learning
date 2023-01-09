@@ -10,21 +10,8 @@ python main_FNN.py 25 60 0.001  test_8
 
 python main_FNN.py 15 60 0.0001  test_9
 
-
-dB
-python main_FNN.py 15 60 0.0001  test_10
-python main_FNN.py 50 60 0.0001 
-
-python main_FNN.py 15 60 0.001 
-python main_FNN.py 20 60 0.001 
-
-
-
-Non dB
 python main_FNN.py 15 150 0.0001 test_11
 
-dB
-python main_FNN.py 15 150 0.0001 
 
 tanh
 python main_FNN.py 15 60 0.0001  test_12
@@ -35,11 +22,19 @@ python main_FNN.py 15 60 0.0001  test_13
 
 
 nb couche 2 et 4
-python main_FNN.py 25 60 0.0001 
+python main_FNN.py 15 60 0.0001 2 couche testt 14  4 couche tst 15
 
-autoencodeur 3 couches 257 128 128 257
-python main_FNN.py 25 60 0.0001 
+autoencodeur 3 couches 257 128 128 257 test 16
+python main_FNN.py 15 60 0.0001 
 
 
+0 snr
+python main_FNN.py 15 60 0.0001  test_17
+python main_FNN.py 70 60 0.0001  18
+python main_FNN.py 25 60 0.0001  19
+
+python main_FNN.py 15 60 0.001 20
+
+python main_FNN.py 15 150 0.0001  test_21
 
 

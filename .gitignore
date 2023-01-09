@@ -4,3 +4,4 @@ pre_processing/create_dataset/noise_cut_4s.npy
 pre_processing/create_dataset/LibriSpeech.zip
 *.pyc
 *.pyc
+*.flac

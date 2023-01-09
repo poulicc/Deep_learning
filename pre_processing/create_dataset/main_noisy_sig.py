@@ -24,26 +24,26 @@ from noisy_sig import create_noisy_sig, single_noisy_sig
 
 # Global variables
 nb_ech = int(16e3*4) # number of samples in a signal
-RSB_db = 10 # SNR
+RSB_db = 0 # SNR
 tab_noise_4s = np.load('noise_cut_4s.npy') # load the tab with all the 4s cafeteria noise
 random_function='unif' # random function to choose the noise
 
-SAVE_TRAIN=False # save the noisy signals in TRAIN/NOISY dataset
-SAVE_VAL=False # save the noisy signals in VAL/NOISY dataset
-SAVE_TEST=False # save the noisy signals in TEST/NOISY dataset
+SAVE_TRAIN=True # save the noisy signals in TRAIN/NOISY dataset
+SAVE_VAL=True # save the noisy signals in VAL/NOISY dataset
+SAVE_TEST=True # save the noisy signals in TEST/NOISY dataset
 
 # Check variables
-TEST_FUNCTION=False # tests on the correct operation of the single_noisy_sig function in the noisy_sig.py file
-TEST_LOAD=True # tests on the correct operation of the jobs once the files have been saved
+TEST_FUNCTION=True # tests on the correct operation of the single_noisy_sig function in the noisy_sig.py file
+TEST_LOAD=False # tests on the correct operation of the jobs once the files have been saved
 
 TEST_RSB=True # verification of the SNR which corresponds to the desired SNR_dB
-TEST_SPECTRO=True # the verification of the noise on the spectrogram of the noisy and non-noisy signals (linear scale)
+TEST_SPECTRO=False # the verification of the noise on the spectrogram of the noisy and non-noisy signals (linear scale)
 TEST_SPECTRO_DB=True # the verification of the noise on the spectrogram of the noisy and non-noisy signals (decibel scale)
 
 #Party to save noisy files for each of the files Train, Val, TEST
 if SAVE_TRAIN:
-    dirpath=os.path.join("..", "..", "network", "Dataset", "Train", "Clean", "*.flac") # path to upload Train/Clean files
-    savepath=os.path.join("..", "..", "network", "Dataset", "Train", "Noisy") # path to save Train/Noisy files
+    dirpath=os.path.join("..", "..", "network", "Dataset", "Train0", "Clean", "*.flac") # path to upload Train/Clean files
+    savepath=os.path.join("..", "..", "network", "Dataset", "Train0", "Noisy") # path to save Train/Noisy files
     data = sorted(glob.glob(dirpath)) #list of dirpath files
 
     for i in range (0, len(data)):
@@ -59,8 +59,8 @@ if SAVE_TRAIN:
         print(i/len(data)*100) # % of achievement
 
 if SAVE_VAL:
-    dirpath=os.path.join("..", "..", "network", "Dataset", "Val", "Clean", "*.flac")
-    savepath=os.path.join("..", "..", "network", "Dataset", "Val", "Noisy")
+    dirpath=os.path.join("..", "..", "network", "Dataset", "Val0", "Clean", "*.flac")
+    savepath=os.path.join("..", "..", "network", "Dataset", "Val0", "Noisy")
     data = sorted(glob.glob(dirpath))
 
     for i in range (0, len(data)):
@@ -76,8 +76,8 @@ if SAVE_VAL:
         print(i/len(data)*100)
 
 if SAVE_TEST:
-    dirpath=os.path.join("..", "..", "network", "Dataset", "Test", "Clean", "*.flac")
-    savepath=os.path.join("..", "..", "network", "Dataset", "Test", "Noisy")
+    dirpath=os.path.join("..", "..", "network", "Dataset", "Test0", "Clean", "*.flac")
+    savepath=os.path.join("..", "..", "network", "Dataset", "Test0", "Noisy")
     data = sorted(glob.glob(dirpath))
 
     for i in range (0, len(data)):
@@ -97,14 +97,14 @@ if SAVE_TEST:
 #FOR ONLY ONE SIGNAL
 
 if TEST_FUNCTION:
-    namefile = os.path.join("..", "..", "network", "Dataset", "Train", "Clean", "0.flac") # path of the clean sig
+    namefile = os.path.join("..", "..", "network", "Dataset", "Train0", "Clean", "0.flac") # path of the clean sig
     clean, _ = sf.read(namefile) # read clean
     new_signal = single_noisy_sig(namefile, RSB_db, tab_noise_4s) # create noisy sig
 
 
 if TEST_LOAD:
-    noisyfile = os.path.join("..", "..", "network", "Dataset", "Test", "Noisy", "2401.flac")# path of the noisy sig
-    cleanfile = os.path.join("..", "..", "network", "Dataset", "Test", "Clean", "2401.flac")# path of the clean sig
+    noisyfile = os.path.join("..", "..", "network", "Dataset", "Test0", "Noisy", "2401.flac")# path of the noisy sig
+    cleanfile = os.path.join("..", "..", "network", "Dataset", "Test0", "Clean", "2401.flac")# path of the clean sig
     new_signal, _ = sf.read(noisyfile) # read noisy
     clean, _ = sf.read(cleanfile) # read clean
 

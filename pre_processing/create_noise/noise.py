@@ -10,7 +10,7 @@
 import numpy as np
 
 def cut_noise_sig(noise_sig, len_ech_reel_sig):
-"""
+    """
     INPUT :
         - noise_sig : array original cafeteria noise
         - len_ech_reel_sig : INT length of this array
@@ -22,7 +22,7 @@ def cut_noise_sig(noise_sig, len_ech_reel_sig):
     This function splits the original signal into small pieces of noise signals
     and stores them in an output array.
 
-"""
+    """
     size_noise = len(noise_sig)
     fac = size_noise//len_ech_reel_sig # number of section
 
@@ -34,7 +34,7 @@ def cut_noise_sig(noise_sig, len_ech_reel_sig):
 
 
 def new_additiv_noise(cut_noise_init, fac, taille_sig_ech):
-"""
+    """
     INPUT :
         - cut_noise_init : array cropped noise_sig
         - fac : INT number of segment cute_noise we can create with noise_sig
@@ -47,7 +47,7 @@ def new_additiv_noise(cut_noise_init, fac, taille_sig_ech):
     This function creates noises, from the noises cut from the initial cafeteria
     noise signal to create more different noises.
 
-"""
+    """
     sig_ref = cut_noise_init[0]
     cut_noise_crop = np.delete(cut_noise_init, (0), axis=0)
     add_new_element= np.zeros((fac-1, taille_sig_ech))
@@ -60,5 +60,5 @@ def new_additiv_noise(cut_noise_init, fac, taille_sig_ech):
         add_new_element = np.zeros((fac-(i+1), taille_sig_ech))
         for k in range(0, cut_noise_crop.shape[0]):
             add_new_element[k] = cut_noise_init[i]+cut_noise_crop[k]
-        new_noise = np.concatenate((new_noise_test, add_new_element))
+        new_noise = np.concatenate((new_noise, add_new_element))
     return new_noise
