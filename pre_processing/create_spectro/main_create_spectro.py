@@ -38,7 +38,7 @@ from spectro_norm import *
 from column_spectro import fill_tab_column
 
 # Global variables : choose what you want to do (set to TRUE)
-SAVE_INDEX=False # save the index (correspondence between file name -number- and its number in the complete list)
+SAVE_INDEX=True # save the index (correspondence between file name -number- and its number in the complete list)
 SAVE_VAL=True #save the validation informations (NOISY and CLEAN)
 SAVE_TRAIN=True #save the training informations (NOISY and CLEAN)
 
@@ -46,11 +46,11 @@ SAVE_TRAIN=True #save the training informations (NOISY and CLEAN)
 sys.path.append(os.path.dirname(__file__))
 CURDIRPATH=os.path.dirname(__file__)
 
-TRAINNOISEPATH=os.path.join("..", "..", "network", "Dataset","Train","Noisy","*.flac") #noisy signals train
-TRAINCLEANPATH=os.path.join("..", "..", "network", "Dataset", "Train","Clean","*.flac") #clean signals train
+TRAINNOISEPATH=os.path.join("..", "..", "network", "Dataset","Train0","Noisy","*.flac") #noisy signals train
+TRAINCLEANPATH=os.path.join("..", "..", "network", "Dataset", "Train0","Clean","*.flac") #clean signals train
 
-VALNOISEPATH=os.path.join("..", "..", "network", "Dataset","Val","Noisy","*.flac")#noisy signals val
-VALCLEANPATH=os.path.join("..", "..", "network", "Dataset", "Val","Clean","*.flac")#clean signals val
+VALNOISEPATH=os.path.join("..", "..", "network", "Dataset","Val0","Noisy","*.flac")#noisy signals val
+VALCLEANPATH=os.path.join("..", "..", "network", "Dataset", "Val0","Clean","*.flac")#clean signals val
 
 #Number of signals in the study
 NB_SAMPLES = "all" #if you want only a part, change it but don't forget to change the saving names of the files
@@ -114,8 +114,8 @@ for index in range (0, len(train_noise_paths)):
         train_index[index,1] = list
 
     if SAVE_TRAIN:
-        SAVENOISEPATH=os.path.join("..", "..", "network", "Dataset_spectro","Train","Noisy")
-        SAVECLEANPATH=os.path.join("..", "..", "network", "Dataset_spectro", "Train","Clean")
+        SAVENOISEPATH=os.path.join("..", "..", "network", "Dataset_spectro","Train0","Noisy")
+        SAVECLEANPATH=os.path.join("..", "..", "network", "Dataset_spectro", "Train0","Clean")
         namefile=str(list)
 
         #If the network is a CNN, we save each spectrogram
@@ -151,8 +151,8 @@ for index in range (0, len(val_noise_paths)):
         val_index[index,1] = list
 
     if SAVE_VAL:
-        SAVENOISEPATH=os.path.join("..", "..", "network", "Dataset_spectro","Val","Noisy")
-        SAVECLEANPATH=os.path.join("..", "..", "network", "Dataset_spectro", "Val","Clean")
+        SAVENOISEPATH=os.path.join("..", "..", "network", "Dataset_spectro","Val0","Noisy")
+        SAVECLEANPATH=os.path.join("..", "..", "network", "Dataset_spectro", "Val0","Clean")
         namefile=str(list)
 
         if NETWORK_TYPE=="CNN":
@@ -167,22 +167,22 @@ if NB_SAMPLES == "all" :
     #paths definitions for each tab
     DATADIRPATH=os.path.join(CURDIRPATH,"..","..","network", "info")
 
-    TRAIN_NOISEPHASE=os.path.join(DATADIRPATH,"Train","X_phase_all")
-    TRAIN_CLEANPHASE=os.path.join(DATADIRPATH,"Train","X_clean_phase_all")
-    TRAIN_NORMA=os.path.join(DATADIRPATH,"Train","normalize_info_all")
-    TRAIN_INDEX=os.path.join(DATADIRPATH,"Train","index_all")
+    TRAIN_NOISEPHASE=os.path.join(DATADIRPATH,"Train0","X_phase_all")
+    TRAIN_CLEANPHASE=os.path.join(DATADIRPATH,"Train0","X_clean_phase_all")
+    TRAIN_NORMA=os.path.join(DATADIRPATH,"Train0","normalize_info_all")
+    TRAIN_INDEX=os.path.join(DATADIRPATH,"Train0","index_all")
 
-    VAL_NOISEPHASE=os.path.join(DATADIRPATH,"Val","X_phase_all")
-    VAL_CLEANPHASE=os.path.join(DATADIRPATH,"Val","X_clean_phase_all")
-    VAL_NORMA=os.path.join(DATADIRPATH,"Val","normalize_info_all")
-    VAL_INDEX=os.path.join(DATADIRPATH,"Val","index_all")
+    VAL_NOISEPHASE=os.path.join(DATADIRPATH,"Val0","X_phase_all")
+    VAL_CLEANPHASE=os.path.join(DATADIRPATH,"Val0","X_clean_phase_all")
+    VAL_NORMA=os.path.join(DATADIRPATH,"Val0","normalize_info_all")
+    VAL_INDEX=os.path.join(DATADIRPATH,"Val0","index_all")
 
     if NETWORK_TYPE=="FNN":
         DATADIRPATH2=os.path.join(CURDIRPATH,"..","..","network", "Dataset")
-        TRAIN_NOISEPATH=os.path.join(DATADIRPATH2,"Train", "Noisy","X_all")
-        TRAIN_CLEANPATH=os.path.join(DATADIRPATH2,"Train","Clean","X_clean_all")
-        VAL_NOISEPATH=os.path.join(DATADIRPATH2,"Val","Noisy","X_all")
-        VAL_CLEANPATH=os.path.join(DATADIRPATH2,"Val","Clean","X_clean_all")
+        TRAIN_NOISEPATH=os.path.join(DATADIRPATH2,"Train0", "Noisy","X_all")
+        TRAIN_CLEANPATH=os.path.join(DATADIRPATH2,"Train0","Clean","X_clean_all")
+        VAL_NOISEPATH=os.path.join(DATADIRPATH2,"Val0","Noisy","X_all")
+        VAL_CLEANPATH=os.path.join(DATADIRPATH2,"Val0","Clean","X_clean_all")
 
 if SAVE_TRAIN:
     np.save(TRAIN_NOISEPHASE, train_noise_tab_phase)
